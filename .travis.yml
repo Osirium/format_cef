@@ -6,5 +6,5 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-install: "pip install setup.py"
+install: "pip install ."
 script: "python setup.py test"
