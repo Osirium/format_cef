@@ -9,4 +9,7 @@ setup(
     url='http://github.com/ch3pjw/format_cef',
     author='Paul Weaver',
     author_email='paul@ruthorn.co.uk',
-    packages=['format_cef'])
+    packages=['format_cef'],
+    install_required=[],
+    tests_require=['pytest'],
+    test_suite='pytest')
