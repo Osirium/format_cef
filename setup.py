@@ -12,6 +12,6 @@ setup(
     author_email='paul@ruthorn.co.uk',
     version='0.0',
     license='LGPL v3.0',
-    install_required=[],
+    install_requires=[],
     tests_require=['pytest'],
     test_suite='pytest')
