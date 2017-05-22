@@ -141,4 +141,10 @@ valid_extensions = {
     'deviceCustomStringLabel5': Extension('cs5Label', str_1023),
     'deviceCustomString6': Extension('cs6', str_1023),
     'deviceCustomStringLabel6': Extension('cs6Label', str_1023),
+    'deviceCustomNumber1': Extension('cn1', int_sanitiser),
+    'deviceCustomNumberLabel1': Extension('cn1Label', str_1023),
+    'deviceCustomNumber2': Extension('cn2', int_sanitiser),
+    'deviceCustomNumberLabel2': Extension('cn2Label', str_1023),
+    'deviceCustomNumber3': Extension('cn3', int_sanitiser),
+    'deviceCustomNumberLabel3': Extension('cn3Label', str_1023),
 }
