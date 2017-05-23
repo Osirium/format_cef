@@ -36,6 +36,11 @@ class TestCef(TestCase):
         self.assertRaises(ValueError, sanitise, 33, 'label')
         self.assertRaises(TypeError, sanitise, 'moo', 'label')
 
+    def test_float_sanitisation(self):
+        sanitise = cef.float_sanitiser()
+        self.assertEqual(sanitise(1.3, 'label'), '1.3')
+        self.assertRaises(TypeError, sanitise, 'moo', 'label')
+
     def test_datetime_sanitisation(self):
         sanitise = cef.datetime_sanitiser()
         d = datetime(2017, 4, 10, 1, 2, 3)

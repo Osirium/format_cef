@@ -65,6 +65,7 @@ def float_sanitiser():
                 debug_name, type(n)))
         else:
             return str(n)
+    return sanitise
 
 
 def str_sanitiser(regex_str='.*', escape_chars='', min_len=0, max_len=None):
