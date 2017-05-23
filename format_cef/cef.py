@@ -58,6 +58,16 @@ def int_sanitiser(max=0, min=0):
 _severity_sanitiser = int_sanitiser(min=0, max=10)
 
 
+def float_sanitiser():
+    def sanitise(n, debug_name):
+        if not isinstance(n, float):
+            raise TypeError('{}: Expected float, got {}'.format(
+                debug_name, type(n)))
+        else:
+            return str(n)
+    return sanitise
+
+
 def str_sanitiser(regex_str='.*', escape_chars='', min_len=0, max_len=None):
     regex = re.compile('^{}$'.format(regex_str))
     escape = escaper(escape_chars)
@@ -110,25 +120,9 @@ str_1023 = str_sanitiser(max_len=1023)
 
 # An incomplete list of valid CEF extensions
 valid_extensions = {
+    'applicationProtocol': Extension('app', str_31),
     'deviceAction': Extension('act', str_63),
     'deviceAddress': Extension('dvc', ipv4_addr),
-    'deviceHostName': Extension('dvchost', str_sanitiser(max_len=100)),
-    'destinationAddress': Extension('dst', ipv4_addr),
-    'destinationHostName': Extension('dhost', str_1023),
-    'destinationPort': Extension('dpt', int_sanitiser(min=0, max=65535)),
-    'destinationUserName': Extension('duser', str_1023),
-    'endTime': Extension('end', datetime_sanitiser()),
-    'fileName': Extension('fname', str_1023),
-    'filePath': Extension('act', str_63),
-    'message': Extension('msg', str_1023),
-    'eventOutcome': Extension('outcome', str_63),
-    'reason': Extension('reason', str_1023),
-    'applicationProtocol': Extension('app', str_31),
-    'transportProtocol': Extension('proto', str_31),
-    'sourceAddress': Extension('src', ipv4_addr),
-    'sourceHostName': Extension('shost', str_1023),
-    'sourceUserName': Extension('suser', str_1023),
-    'start': Extension('start', datetime_sanitiser()),
     'deviceCustomString1': Extension('cs1', str_1023),
     'deviceCustomString1Label': Extension('cs1Label', str_1023),
     'deviceCustomString2': Extension('cs2', str_1023),
@@ -147,4 +141,31 @@ valid_extensions = {
     'deviceCustomNumber2Label': Extension('cn2Label', str_1023),
     'deviceCustomNumber3': Extension('cn3', int_sanitiser),
     'deviceCustomNumber3Label': Extension('cn3Label', str_1023),
+    'deviceEventCategory': Extension('cat', str_1023),
+    'deviceCustomFloatingPoint1': Extension('cfp1', float_sanitiser),
+    'deviceCustomFloatingPoint1Label': Extension('cfp1Label', str_sanitiser()),
+    'deviceCustomFloatingPoint2': Extension('cfp2', float_sanitiser),
+    'deviceCustomFloatingPoint2Label': Extension('cfp2Label', str_sanitiser()),
+    'deviceCustomFloatingPoint3': Extension('cfp3', float_sanitiser),
+    'deviceCustomFloatingPoint3Label': Extension('cfp3Label', str_sanitiser()),
+    'deviceCustomFloatingPoint4': Extension('cfp4', float_sanitiser),
+    'deviceCustomFloatingPoint4Label': Extension('cfp4Label', str_sanitiser()),
+    'deviceHostName': Extension('dvchost', str_sanitiser(max_len=100)),
+    'destinationAddress': Extension('dst', ipv4_addr),
+    'destinationHostName': Extension('dhost', str_1023),
+    'destinationPort': Extension('dpt', int_sanitiser(min=0, max=65535)),
+    'destinationUserName': Extension('duser', str_1023),
+    'endTime': Extension('end', datetime_sanitiser()),
+    'eventOutcome': Extension('outcome', str_63),
+    'externalID': Extension('externalID', str_sanitiser(max_len=40)),
+    'fileName': Extension('fname', str_1023),
+    'filePath': Extension('act', str_63),
+    'message': Extension('msg', str_1023),
+    'reason': Extension('reason', str_1023),
+    'requestURL': Extension('request', str_1023),
+    'sourceAddress': Extension('src', ipv4_addr),
+    'sourceHostName': Extension('shost', str_1023),
+    'sourceUserName': Extension('suser', str_1023),
+    'start': Extension('start', datetime_sanitiser()),
+    'transportProtocol': Extension('proto', str_31),
 }
