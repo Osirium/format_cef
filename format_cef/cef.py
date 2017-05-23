@@ -58,6 +58,15 @@ def int_sanitiser(max=0, min=0):
 _severity_sanitiser = int_sanitiser(min=0, max=10)
 
 
+def float_sanitiser():
+    def sanitise(n, debug_name):
+        if not isinstance(n, float):
+            raise TypeError('{}: Expected float, got {}'.format(
+                debug_name, type(n)))
+        else:
+            return str(n)
+
+
 def str_sanitiser(regex_str='.*', escape_chars='', min_len=0, max_len=None):
     regex = re.compile('^{}$'.format(regex_str))
     escape = escaper(escape_chars)
@@ -131,6 +140,14 @@ valid_extensions = {
     'deviceCustomNumber2Label': Extension('cn2Label', str_1023),
     'deviceCustomNumber3': Extension('cn3', int_sanitiser),
     'deviceCustomNumber3Label': Extension('cn3Label', str_1023),
+    'deviceCustomFloatingPoint1': Extension('cfp1', float_sanitiser),
+    'deviceCustomFloatingPoint1Label': Extension('cfp1Label', str_sanitiser()),
+    'deviceCustomFloatingPoint2': Extension('cfp2', float_sanitiser),
+    'deviceCustomFloatingPoint2Label': Extension('cfp2Label', str_sanitiser()),
+    'deviceCustomFloatingPoint3': Extension('cfp3', float_sanitiser),
+    'deviceCustomFloatingPoint3Label': Extension('cfp3Label', str_sanitiser()),
+    'deviceCustomFloatingPoint4': Extension('cfp4', float_sanitiser),
+    'deviceCustomFloatingPoint4Label': Extension('cfp4Label', str_sanitiser()),
     'deviceHostName': Extension('dvchost', str_sanitiser(max_len=100)),
     'destinationAddress': Extension('dst', ipv4_addr),
     'destinationHostName': Extension('dhost', str_1023),
