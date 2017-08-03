@@ -15,6 +15,11 @@ class TestCef(TestCase):
         sanitise = cef.str_sanitiser('banana')
         self.assertEqual(sanitise('banana', 'label'), 'banana')
         self.assertRaises(ValueError, sanitise, 'apple', 'label')
+        sanitise = cef.str_sanitiser()
+        self.assertEqual(sanitise('', 'label'), '')
+        sanitise = cef.str_sanitiser(min_len=1)
+        self.assertRaises(ValueError, sanitise, '', 'label')
+        self.assertEqual(sanitise('a', 'label'), 'a')
 
     def test_bounded_str_sanitisation(self):
         sanitise = cef.str_sanitiser(
