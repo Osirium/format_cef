@@ -87,7 +87,7 @@ def str_sanitiser(regex_str='.*', escape_chars='', min_len=0, max_len=None):
             if max_len is None:
                 if len(s) < min_len:
                     raise ValueError(
-                        '{}: String longer than {} characters'.format(
+                        '{}: String shorter than {} characters'.format(
                             debug_name, min_len))
             else:
                 if not min_len <= len(s) <= max_len:
