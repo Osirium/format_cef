@@ -53,6 +53,20 @@ class TestCef(TestCase):
         self.assertEqual(sanitise(d, 'label'), expected)
         self.assertRaises(TypeError, sanitise, expected, 'label')
 
+    def test_ensure_in_range(self):
+        self.assertRaises(ValueError, cef.ensure_in_range, 'test', 3, 5, 2)
+        cef.ensure_in_range('test', 3, 5, 3)
+        cef.ensure_in_range('test', 3, 5, 4)
+        cef.ensure_in_range('test', 3, 5, 5)
+        self.assertRaises(ValueError, cef.ensure_in_range, 'test', 3, 5, 6)
+        cef.ensure_in_range('test', None, 5, 4)
+        cef.ensure_in_range('test', None, 5, 5)
+        self.assertRaises(ValueError, cef.ensure_in_range, 'test', None, 5, 6)
+        cef.ensure_in_range('test', 3, None, 4)
+        cef.ensure_in_range('test', 3, None, 3)
+        self.assertRaises(ValueError, cef.ensure_in_range, 'test', 3, None, 2)
+        cef.ensure_in_range('test', None, None, 42)
+
     def test_format_cef(self):
         args = (
             'acme corp', 'TNT', '1.0', '404 | not found',
