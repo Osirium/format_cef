@@ -75,3 +75,23 @@ class TestCef(TestCase):
             cef.format_cef(*args, extensions={'deviceAction': 'explode = !'}),
             r'CEF:0|acme corp|TNT|1.0|404 \| not found|Explosives not found|'
             r'10|act=explode \= !')
+
+    def test_extensions_with_prototypical_data(self):
+        # This pretty much just checks that all the sanitisers execute!
+        example_data = {
+            'destinationAddress': '1.2.3.4',
+            'destinationPort': 22,
+            'deviceAddress': '2.3.4.5',
+            'deviceCustomFloatingPoint1': 1.0,
+            'deviceCustomFloatingPoint2': 2.0,
+            'deviceCustomFloatingPoint3': 3.0,
+            'deviceCustomFloatingPoint4': 4.0,
+            'deviceCustomNumber1': 1,
+            'deviceCustomNumber2': 2,
+            'deviceCustomNumber3': 3,
+            'endTime': datetime(2017, 8, 9, 9, 14, 33),
+            'sourceAddress': '3.4.5.6',
+            'start': datetime(2017, 8, 9, 9, 0, 0)
+        }
+        for extension_name, (key_name, f) in cef.valid_extensions.items():
+            f(example_data.get(extension_name, 'foo'), extension_name)
