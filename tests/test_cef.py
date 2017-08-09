@@ -34,7 +34,7 @@ class TestCef(TestCase):
         self.assertRaises(TypeError, sanitise, 3, 'label')
 
     def test_int_stanitisation(self):
-        sanitise = cef.int_sanitiser(32)
+        sanitise = cef.int_sanitiser(min=0, max=32)
         self.assertEqual(sanitise(0, 'label'), '0')
         self.assertEqual(sanitise(32, 'label'), '32')
         self.assertRaises(ValueError, sanitise, -1, 'label')

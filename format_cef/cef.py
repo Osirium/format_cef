@@ -56,7 +56,7 @@ def ensure_in_range(debug_name, min, max, num):
             debug_name, num, min, max))
 
 
-def int_sanitiser(max=0, min=0):
+def int_sanitiser(max=None, min=None):
     def sanitise(n, debug_name):
         if not isinstance(n, int):
             raise TypeError('{}: Expected int, got {}'.format(
@@ -146,11 +146,11 @@ valid_extensions = {
     'deviceCustomString5Label': Extension('cs5Label', str_1023),
     'deviceCustomString6': Extension('cs6', str_1023),
     'deviceCustomString6Label': Extension('cs6Label', str_1023),
-    'deviceCustomNumber1': Extension('cn1', int_sanitiser(None, None)),
+    'deviceCustomNumber1': Extension('cn1', int_sanitiser()),
     'deviceCustomNumber1Label': Extension('cn1Label', str_1023),
-    'deviceCustomNumber2': Extension('cn2', int_sanitiser(None, None)),
+    'deviceCustomNumber2': Extension('cn2', int_sanitiser()),
     'deviceCustomNumber2Label': Extension('cn2Label', str_1023),
-    'deviceCustomNumber3': Extension('cn3', int_sanitiser(None, None)),
+    'deviceCustomNumber3': Extension('cn3', int_sanitiser()),
     'deviceCustomNumber3Label': Extension('cn3Label', str_1023),
     'deviceEventCategory': Extension('cat', str_1023),
     'deviceCustomFloatingPoint1': Extension('cfp1', float_sanitiser()),
