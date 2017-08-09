@@ -42,16 +42,27 @@ def escaper(special_chars):
     return escape
 
 
-def int_sanitiser(max=0, min=0):
+def ensure_in_range(debug_name, min, max, num):
+    if max is None:
+        if min is not None and num < min:
+            raise ValueError('{}: {} less than {}'.format(
+                debug_name, num, min))
+    elif min is None:
+        if max is not None and num > max:
+            raise ValueError('{}: {} greater than {}'.format(
+                debug_name, num, max))
+    elif not min <= num <= max:
+        raise ValueError('{}: {} out of range {}-{}'.format(
+            debug_name, num, min, max))
+
+
+def int_sanitiser(max=None, min=None):
     def sanitise(n, debug_name):
         if not isinstance(n, int):
             raise TypeError('{}: Expected int, got {}'.format(
                 debug_name, type(n)))
-        elif not min <= n <= max:
-            raise ValueError('{}: {} out of range {}-{}'.format(
-                debug_name, n, min, max))
-        else:
-            return str(n)
+        ensure_in_range(debug_name, min, max, n)
+        return str(n)
     return sanitise
 
 
@@ -135,20 +146,20 @@ valid_extensions = {
     'deviceCustomString5Label': Extension('cs5Label', str_1023),
     'deviceCustomString6': Extension('cs6', str_1023),
     'deviceCustomString6Label': Extension('cs6Label', str_1023),
-    'deviceCustomNumber1': Extension('cn1', int_sanitiser),
+    'deviceCustomNumber1': Extension('cn1', int_sanitiser()),
     'deviceCustomNumber1Label': Extension('cn1Label', str_1023),
-    'deviceCustomNumber2': Extension('cn2', int_sanitiser),
+    'deviceCustomNumber2': Extension('cn2', int_sanitiser()),
     'deviceCustomNumber2Label': Extension('cn2Label', str_1023),
-    'deviceCustomNumber3': Extension('cn3', int_sanitiser),
+    'deviceCustomNumber3': Extension('cn3', int_sanitiser()),
     'deviceCustomNumber3Label': Extension('cn3Label', str_1023),
     'deviceEventCategory': Extension('cat', str_1023),
-    'deviceCustomFloatingPoint1': Extension('cfp1', float_sanitiser),
+    'deviceCustomFloatingPoint1': Extension('cfp1', float_sanitiser()),
     'deviceCustomFloatingPoint1Label': Extension('cfp1Label', str_sanitiser()),
-    'deviceCustomFloatingPoint2': Extension('cfp2', float_sanitiser),
+    'deviceCustomFloatingPoint2': Extension('cfp2', float_sanitiser()),
     'deviceCustomFloatingPoint2Label': Extension('cfp2Label', str_sanitiser()),
-    'deviceCustomFloatingPoint3': Extension('cfp3', float_sanitiser),
+    'deviceCustomFloatingPoint3': Extension('cfp3', float_sanitiser()),
     'deviceCustomFloatingPoint3Label': Extension('cfp3Label', str_sanitiser()),
-    'deviceCustomFloatingPoint4': Extension('cfp4', float_sanitiser),
+    'deviceCustomFloatingPoint4': Extension('cfp4', float_sanitiser()),
     'deviceCustomFloatingPoint4Label': Extension('cfp4Label', str_sanitiser()),
     'deviceHostName': Extension('dvchost', str_sanitiser(max_len=100)),
     'destinationAddress': Extension('dst', ipv4_addr),
