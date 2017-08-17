@@ -28,8 +28,7 @@ Currently, the library only implements a subset of the permissable CEF
 extensions that were personally useful. I'm very happy to take PRs to extend
 coverage to the fully valid CEF extension set.
 
-[CEF]: https://www.protect724.hpe.com/servlet/JiveServlet/downloadBody/1072-102-9-20354/CommonEventFormatv23.pdf
-
+[CEF]: https://community.saas.hpe.com/dcvta86296/attachments/dcvta86296/connector-documentation/1116/1/CommonEventFormatv23.pdf
 
 Licence
 -------
