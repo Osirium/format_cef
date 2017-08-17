@@ -28,8 +28,7 @@ Currently, the library only implements a subset of the permissable CEF
 extensions that were personally useful. I'm very happy to take PRs to extend
 coverage to the fully valid CEF extension set.
 
-[CEF]: https://community.saas.hpe.com/t5/ArcSight-Connectors/ArcSight-Common-Event-Format-CEF-Guide/ta-p/1589306
-
+[CEF]: https://community.saas.hpe.com/dcvta86296/attachments/dcvta86296/connector-documentation/1116/1/CommonEventFormatv23.pdf
 
 Licence
 -------
