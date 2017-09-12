@@ -8,8 +8,6 @@ setup(
         'compliant messages'),
     keywords=['cef', 'logging'],
     url='http://github.com/ch3pjw/format_cef',
-    author='Paul Weaver',
-    author_email='paul@ruthorn.co.uk',
     version='0.0.3',
     install_requires=[],
     tests_require=['pytest'],
