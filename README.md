@@ -1,9 +1,6 @@
 format_cef
 ==========
 
-[![Build Status](https://travis-ci.org/ch3pjw/format_cef.svg?branch=master)](
-https://travis-ci.org/ch3pjw/format_cef)
-
 `format_cef` is a little helper library for producing [ArcSight Common Event
 Format (CEF)][CEF] compliant messages from structured arguments. You can use it
 like this:
