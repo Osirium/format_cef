@@ -7,7 +7,7 @@ setup(
         'A small helper for formatting ArcSight Common Event Format (CEF) '
         'compliant messages'),
     keywords=['cef', 'logging'],
-    url='http://github.com/ch3pjw/format_cef',
+    url='https://github.com/Osirium/format_cef',
     version='0.0.3',
     install_requires=[],
     tests_require=['pytest'],
