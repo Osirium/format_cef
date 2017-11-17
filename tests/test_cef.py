@@ -20,6 +20,10 @@ class TestCef(TestCase):
         sanitise = cef.str_sanitiser(min_len=1)
         self.assertRaises(ValueError, sanitise, '', 'label')
         self.assertEqual(sanitise('a', 'label'), 'a')
+        sanitise = cef.str_sanitiser(max_len=20)
+        self.assertEqual(
+            sanitise('blarn' * 10, 'blarn'),
+            'blarnblarnblarnblarnblarnblarnblarnb TRUNCATED ...')
 
     def test_bounded_str_sanitisation(self):
         sanitise = cef.str_sanitiser(
@@ -27,9 +31,6 @@ class TestCef(TestCase):
         self.assertRaises(ValueError, sanitise, 'an', 'label')
         self.assertEqual(sanitise('ba', 'label'), r'\ba')
         self.assertEqual(sanitise('banan', 'label'), r'\banan')
-        # Escaping makes string too long:
-        self.assertRaisesRegexp(
-            ValueError, 'range', sanitise, 'banana', 'label')
         self.assertRaises(ValueError, sanitise, 'apple', 'label')
         self.assertRaises(TypeError, sanitise, 3, 'label')
 

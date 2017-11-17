@@ -101,10 +101,12 @@ def str_sanitiser(regex_str='.*', escape_chars='', min_len=0, max_len=None):
                         '{}: String shorter than {} characters'.format(
                             debug_name, min_len))
             else:
-                if not min_len <= len(s) <= max_len:
+                if min_len > len(s):
                     raise ValueError(
                         '{}: String length out of range {}-{}'.format(
                             debug_name, min_len, max_len))
+                elif max_len < len(s):
+                    s = s[:-14] + ' TRUNCATED ...'
             return s
     return sanitise
 
