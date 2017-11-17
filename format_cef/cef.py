@@ -106,7 +106,7 @@ def str_sanitiser(regex_str='.*', escape_chars='', min_len=0, max_len=None):
                         '{}: String length out of range {}-{}'.format(
                             debug_name, min_len, max_len))
                 elif max_len < len(s):
-                    s = s[:len(s) - 14] + ' TRUNCATED ...'
+                    s = s[:-14] + ' TRUNCATED ...'
             return s
     return sanitise
 
