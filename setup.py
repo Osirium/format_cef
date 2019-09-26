@@ -15,10 +15,8 @@ setup(
         'compliant messages'),
     keywords=['cef', 'logging'],
     url='https://github.com/Osirium/format_cef',
-    version='0.0.3',
+    version='0.0.3-post1',
     install_requires=[],
-    tests_require=['pytest'],
-    test_suite='pytest',
     long_description=long_description,
     long_description_content_type='text/markdown'
 )
