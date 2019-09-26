@@ -133,7 +133,6 @@ str_128 = str_sanitiser(max_len=128)
 str_255 = str_sanitiser(max_len=255)
 str_1023 = str_sanitiser(max_len=1023)
 
-# An incomplete list of valid CEF extensions
 valid_extensions = {
     'applicationProtocol': Extension('app', str_31),
     'baseEventCount': Extension('cnt', int_sanitiser()),
