@@ -10,7 +10,7 @@ with io.open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='format_cef',
     packages=['format_cef'],
-    decsription=(
+    description=(
         'A small helper for formatting ArcSight Common Event Format (CEF) '
         'compliant messages'),
     keywords=['cef', 'logging'],
