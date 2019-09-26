@@ -171,7 +171,7 @@ valid_extensions = {
     'deviceCustomIPv6Address3': Extension('c6a3', ipv6_addr),
     'deviceCustomIPv6Address3Label': Extension('c6a3Label', str_1023),
     'deviceCustomIPv6Address4': Extension('c6a4', ipv6_addr),
-    'deviceCustomIPv6Address4Label': Extension('c6a4Label', str_1023),
+    'deviceCustomIPv6Address4Label': Extension('C6a4Label', str_1023),
     'deviceCustomNumber1': Extension('cn1', int_sanitiser()),
     'deviceCustomNumber1Label': Extension('cn1Label', str_1023),
     'deviceCustomNumber2': Extension('cn2', int_sanitiser()),
