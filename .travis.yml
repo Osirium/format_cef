@@ -4,4 +4,4 @@ python:
 install:
   - "pip install -r requirements-test.txt"
   - "pip install ."
-script: "pytest"
+script: "./.travis_script"
