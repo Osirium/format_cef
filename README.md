@@ -13,7 +13,7 @@ like this:
 'CEF:0|acme corp|TNT|1.0|404 \| not found|Explosives not found|10|act=bang \= !'
 ```
 
-Notice how the format `format_cef` takes care of escaping deimiters correctly.
+Notice how the format `format_cef` takes care of escaping delimiters correctly.
 It will also ensure that each CEF extension complies to the restrictions
 outlined in the [CEF documentation][CEF].
 
@@ -25,4 +25,4 @@ Currently, the library only implements a subset of the permissable CEF
 extensions that were personally useful. I'm very happy to take PRs to extend
 coverage to the fully valid CEF extension set.
 
-[CEF]: https://www.protect724.hpe.com/servlet/JiveServlet/downloadBody/1072-102-9-20354/CommonEventFormatv23.pdf
+[CEF]: https://web.archive.org/web/20190930102530/https://community.microfocus.com/dcvta86296/attachments/dcvta86296/connector-documentation/1197/2/CommonEventFormatV25.pdf
