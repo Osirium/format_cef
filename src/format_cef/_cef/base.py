@@ -5,6 +5,8 @@ import csv
 import datetime as dt
 import re
 
+import six
+
 from . import compat
 
 try:
@@ -37,16 +39,18 @@ def format_cef(
         sorted("{}={}".format(k, v) for k, v in extension_strs.items())
     )
     pfs = _prefix_field_str_sanitiser
-    return "|".join(
-        (
-            "CEF:0",
-            pfs(vendor, "VENDOR"),
-            pfs(product, "PRODUCT"),
-            pfs(product_version, "VERSION"),
-            pfs(event_id, "EVENT_ID"),
-            pfs(event_name, "EVENT_NAME"),
-            _severity_sanitiser(severity, "SEVERITY"),
-            extensions_str,
+    return six.ensure_binary(
+        "|".join(
+            (
+                "CEF:0",
+                pfs(vendor, "VENDOR"),
+                pfs(product, "PRODUCT"),
+                pfs(product_version, "VERSION"),
+                pfs(event_id, "EVENT_ID"),
+                pfs(event_name, "EVENT_NAME"),
+                _severity_sanitiser(severity, "SEVERITY"),
+                extensions_str,
+            )
         )
     )
 
@@ -101,31 +105,30 @@ def str_sanitiser(regex_str=".*", escape_chars="", min_len=0, max_len=None):
     escape = escaper(escape_chars)
 
     def sanitise(s, debug_name):
-        if not isinstance(s, basestring):
+        if not isinstance(s, six.string_types):
             raise TypeError("{}: Expected str, got {}".format(debug_name, type(s)))
-        elif not regex.match(s):
+        if not regex.match(s):
             raise ValueError(
                 "{}: {!r} did not match regex {!r}".format(debug_name, s, regex_str)
             )
-        else:
-            if isinstance(s, unicode):
-                s = s.encode("utf-8")
-            s = escape(s)
-            if max_len is None:
-                if len(s) < min_len:
-                    raise ValueError(
-                        "{}: String shorter than {} characters".format(
-                            debug_name, min_len
-                        )
-                    )
-            else:
-                if not min_len <= len(s) <= max_len:
-                    raise ValueError(
-                        "{}: String length out of range {}-{}".format(
-                            debug_name, min_len, max_len
-                        )
-                    )
-            return s
+
+        escaped = escape(s)
+        if max_len is None and not min_len:
+            return escaped
+
+        byte_len = len(six.ensure_binary(escaped))
+        if (max_len is None) and (byte_len < min_len):
+            raise ValueError(
+                "{}: String shorter than {} bytes".format(debug_name, min_len)
+            )
+
+        if (max_len is not None) and not min_len <= byte_len <= max_len:
+            raise ValueError(
+                "{}: String length out of range {}-{}".format(
+                    debug_name, min_len, max_len
+                )
+            )
+        return escaped
 
     return sanitise
 

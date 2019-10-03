@@ -1,6 +1,8 @@
 from unittest import TestCase
 from datetime import datetime
 
+import six
+
 from format_cef import cef
 
 
@@ -23,16 +25,29 @@ class TestCef(TestCase):
         self.assertEqual(sanitise("a", "label"), "a")
 
     def test_bounded_str_sanitisation(self):
+        grimacing_face = u"\U0001f62c"
         sanitise = cef.str_sanitiser(
             "[banana]*", min_len=3, max_len=6, escape_chars="b"
         )
         self.assertRaises(ValueError, sanitise, "an", "label")
         self.assertEqual(sanitise("ba", "label"), r"\ba")
         self.assertEqual(sanitise("banan", "label"), r"\banan")
+
         # Escaping makes string too long:
-        self.assertRaisesRegexp(ValueError, "range", sanitise, "banana", "label")
+        six.assertRaisesRegex(self, ValueError, "range", sanitise, "banana", "label")
         self.assertRaises(ValueError, sanitise, "apple", "label")
         self.assertRaises(TypeError, sanitise, 3, "label")
+        # encoding makes string too long:
+        six.assertRaisesRegex(
+            self,
+            ValueError,
+            "range",
+            cef.str_sanitiser(max_len=3),
+            grimacing_face,
+            "label",
+        )
+        # encoding makes string long enough:
+        assert cef.str_sanitiser(min_len=4)(grimacing_face, "dbg") == grimacing_face
 
     def test_int_stanitisation(self):
         sanitise = cef.int_sanitiser(min=0, max=32)
@@ -79,8 +94,10 @@ class TestCef(TestCase):
         )
         self.assertEqual(
             cef.format_cef(*args, extensions={"deviceAction": "explode = !"}),
-            r"CEF:0|acme corp|TNT|1.0|404 \| not found|Explosives not found|"
-            r"10|act=explode \= !",
+            six.ensure_binary(
+                r"CEF:0|acme corp|TNT|1.0|404 \| not found|Explosives not found|"
+                r"10|act=explode \= !"
+            ),
         )
 
     def test_extensions_with_prototypical_data(self):
