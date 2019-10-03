@@ -151,15 +151,19 @@ Extension = collections.namedtuple("Extension", ("key_name", "sanitiser"))
 
 
 def _valid_extensions():
-    ipv4_addr = str_sanitiser(r"\.".join([r"\d{1,3}"] * 4))
-    ipv6_addr = str_sanitiser(
-        r"\:".join(["[0-9a-fA-F]{1,4}"] * 8)
+    ipv4_addr_re = r"\.".join([r"\d{1,3}"] * 4)
+    ipv4_addr = str_sanitiser(ipv4_addr_re)
+    ipv6_addr_re = r"\:".join(
+        ["[0-9a-fA-F]{1,4}"] * 8
     )  # only complete ipv6 address accepted
+    ipv6_addr = str_sanitiser(ipv6_addr_re)
+    ip_addr = str_sanitiser(r"(" + ipv6_addr_re + r"|" + ipv4_addr_re + r")")
     mac_addr = str_sanitiser(r"\:".join(["[0-9a-fA-F]{2}"] * 6))
-    str_lens = [31, 40, 63, 100, 128, 255, 1023, 2048]
+    str_lens = [31, 40, 63, 100, 128, 200, 255, 1023, 2048, 4000]
     sanitisers = {
         "IPv4 Address": {"": ipv4_addr},
         "IPv6 address": {"": ipv6_addr},
+        "IP Address": {"": ip_addr},
         "MAC Address": {"": mac_addr},
         "Time Stamp": {"": datetime_sanitiser()},
         "Floating Point": {"": float_sanitiser()},

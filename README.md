@@ -25,4 +25,4 @@ Currently, the library only implements a subset of the permissable CEF
 extensions that were personally useful. I'm very happy to take PRs to extend
 coverage to the fully valid CEF extension set.
 
-[CEF]: https://web.archive.org/web/20190930102530/https://community.microfocus.com/dcvta86296/attachments/dcvta86296/connector-documentation/1197/2/CommonEventFormatV25.pdf
+[CEF]: https://web.archive.org/web/20191001144632/https://community.microfocus.com/dcvta86296/attachments/dcvta86296/connector-documentation/1197/2/CommonEventFormatV25.pdf

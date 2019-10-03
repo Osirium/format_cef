@@ -1,8 +1,19 @@
+dist: bionic
 language: python
 python:
   - "2.7"
   - "3.6"
   - "3.7"
+matrix:
+  include:
+    - language: python
+      python: 3.7
+      addons:
+        apt:
+          packages:
+            - ghostscript
+      install: "pip install -r requirements-gen-extensions.txt"
+      script: "python -m gen_extensions | diff -u ./src/format_cef/_cef/valid_extensions.csv -"
 install:
   - "pip install -r requirements-test.txt"
   - "pip install ."
