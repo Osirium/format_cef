@@ -18,3 +18,4 @@ install:
   - "pip install -r requirements-test.txt"
   - "pip install ."
 script: "pytest"
+cache: pip
