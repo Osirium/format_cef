@@ -28,7 +28,7 @@ def map_optional(fn, v):
 
 
 def process(camelot_tables):
-    def concat_ophans_and_widows(acc, v):
+    def concat_orphans_and_widows(acc, v):
         v_head, *v_tail = v
         v_head_meaning = v_head[MEANING]
 
@@ -58,7 +58,7 @@ def process(camelot_tables):
                 DATA_TYPE: record[DATA_TYPE],
             }
             for record in functools.reduce(
-                concat_ophans_and_widows,
+                concat_orphans_and_widows,
                 (
                     df_with_cols.replace(
                         {r"(\A\s+|\s+\Z)": "", r"\s+": " "}, regex=True
