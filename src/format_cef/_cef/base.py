@@ -15,44 +15,16 @@ except ImportError:
     import importlib_resources
 
 
-def format_cef(
-    vendor, product, product_version, event_id, event_name, severity, extensions
-):
-    """Produces a CEF compliant message from the arguments.
+class FormatCefError(Exception):
+    pass
 
-    :parameter str vendor: Vendor part of the product type identifier
-    :parameter str product: Product part of the product type identifier
-    :parameter str product_version: Version part of the product type identifier
-    :parameter str event_id: A unique identifier for the type of event being
-        reported
-    :parameter str event_name: A human-friendly description of the event
-    :parameter int severity: Between 0 and 10 inclusive.
-    :parameter dict extensions: key-value pairs for event metadata.
-    """
-    extension_strs = {
-        valid_extensions[name].key_name: _equals_escaper(
-            valid_extensions[name].sanitiser(value, name)
-        )
-        for name, value in extensions.items()
-    }
-    extensions_str = " ".join(
-        sorted("{}={}".format(k, v) for k, v in extension_strs.items())
-    )
-    pfs = _prefix_field_str_sanitiser
-    return six.ensure_binary(
-        "|".join(
-            (
-                "CEF:0",
-                pfs(vendor, "VENDOR"),
-                pfs(product, "PRODUCT"),
-                pfs(product_version, "VERSION"),
-                pfs(event_id, "EVENT_ID"),
-                pfs(event_name, "EVENT_NAME"),
-                _severity_sanitiser(severity, "SEVERITY"),
-                extensions_str,
-            )
-        )
-    )
+
+class CefValueError(FormatCefError, ValueError):
+    pass
+
+
+class CefTypeError(FormatCefError, TypeError):
+    pass
 
 
 def escaper(special_chars):
@@ -69,18 +41,20 @@ def escaper(special_chars):
 def ensure_in_range(debug_name, min, max, num):
     if max is None:
         if min is not None and num < min:
-            raise ValueError("{}: {} less than {}".format(debug_name, num, min))
+            raise CefValueError("{}: {} less than {}".format(debug_name, num, min))
     elif min is None:
         if max is not None and num > max:
-            raise ValueError("{}: {} greater than {}".format(debug_name, num, max))
+            raise CefValueError("{}: {} greater than {}".format(debug_name, num, max))
     elif not min <= num <= max:
-        raise ValueError("{}: {} out of range {}-{}".format(debug_name, num, min, max))
+        raise CefValueError(
+            "{}: {} out of range {}-{}".format(debug_name, num, min, max)
+        )
 
 
 def int_sanitiser(max=None, min=None):
     def sanitise(n, debug_name):
         if not isinstance(n, int):
-            raise TypeError("{}: Expected int, got {}".format(debug_name, type(n)))
+            raise CefTypeError("{}: Expected int, got {}".format(debug_name, type(n)))
         ensure_in_range(debug_name, min, max, n)
         return str(n)
 
@@ -93,7 +67,7 @@ _severity_sanitiser = int_sanitiser(min=0, max=10)
 def float_sanitiser():
     def sanitise(n, debug_name):
         if not isinstance(n, float):
-            raise TypeError("{}: Expected float, got {}".format(debug_name, type(n)))
+            raise CefTypeError("{}: Expected float, got {}".format(debug_name, type(n)))
         else:
             return str(n)
 
@@ -106,9 +80,9 @@ def str_sanitiser(regex_str=".*", escape_chars="", min_len=0, max_len=None):
 
     def sanitise(s, debug_name):
         if not isinstance(s, six.string_types):
-            raise TypeError("{}: Expected str, got {}".format(debug_name, type(s)))
+            raise CefTypeError("{}: Expected str, got {}".format(debug_name, type(s)))
         if not regex.match(s):
-            raise ValueError(
+            raise CefValueError(
                 "{}: {!r} did not match regex {!r}".format(debug_name, s, regex_str)
             )
 
@@ -118,12 +92,12 @@ def str_sanitiser(regex_str=".*", escape_chars="", min_len=0, max_len=None):
 
         byte_len = len(six.ensure_binary(escaped))
         if (max_len is None) and (byte_len < min_len):
-            raise ValueError(
+            raise CefValueError(
                 "{}: String shorter than {} bytes".format(debug_name, min_len)
             )
 
         if (max_len is not None) and not min_len <= byte_len <= max_len:
-            raise ValueError(
+            raise CefValueError(
                 "{}: String length out of range {}-{}".format(
                     debug_name, min_len, max_len
                 )
@@ -140,7 +114,9 @@ _equals_escaper = escaper("=")
 def datetime_sanitiser():
     def sanitise(t, debug_name):
         if not isinstance(t, dt.datetime):
-            raise TypeError("{}: Expected datetime, got {}".format(debug_name, type(t)))
+            raise CefTypeError(
+                "{}: Expected datetime, got {}".format(debug_name, type(t))
+            )
         else:
             return t.strftime("%b %d %Y %H:%M:%S")
 
@@ -150,7 +126,7 @@ def datetime_sanitiser():
 Extension = collections.namedtuple("Extension", ("key_name", "sanitiser"))
 
 
-def _valid_extensions():
+def _valid_extensions(fname="valid_extensions.csv"):
     ipv4_addr_re = r"\.".join([r"\d{1,3}"] * 4)
     ipv4_addr = str_sanitiser(ipv4_addr_re)
     ipv6_addr_re = r"\:".join(
@@ -175,7 +151,7 @@ def _valid_extensions():
     }
 
     with importlib_resources.open_text(
-        compat.pkgname(globals()), "valid_extensions.csv", encoding="ascii"
+        compat.pkgname(globals()), fname, encoding="ascii"
     ) as csv_f:
         return {
             record["Full Name"]: Extension(
@@ -186,4 +162,60 @@ def _valid_extensions():
         }
 
 
-valid_extensions = _valid_extensions()
+class CefFormatter(object):
+    valid_extensions = _valid_extensions()
+
+    def format_cef(
+        self,
+        vendor,
+        product,
+        product_version,
+        event_id,
+        event_name,
+        severity,
+        extensions,
+    ):
+        """Produces a CEF compliant message from the arguments.
+
+        :parameter str vendor: Vendor part of the product type identifier
+        :parameter str product: Product part of the product type identifier
+        :parameter str product_version: Version part of the product type identifier
+        :parameter str event_id: A unique identifier for the type of event being
+            reported
+        :parameter str event_name: A human-friendly description of the event
+        :parameter int severity: Between 0 and 10 inclusive.
+        :parameter dict extensions: key-value pairs for event metadata.
+        """
+        valid_extensions = self.valid_extensions
+        extension_strs = {
+            valid_extensions[name].key_name: _equals_escaper(
+                valid_extensions[name].sanitiser(value, name)
+            )
+            for name, value in extensions.items()
+        }
+        extensions_str = " ".join(
+            sorted("{}={}".format(k, v) for k, v in extension_strs.items())
+        )
+        pfs = _prefix_field_str_sanitiser
+        return six.ensure_binary(
+            "|".join(
+                (
+                    "CEF:0",
+                    pfs(vendor, "VENDOR"),
+                    pfs(product, "PRODUCT"),
+                    pfs(product_version, "VERSION"),
+                    pfs(event_id, "EVENT_ID"),
+                    pfs(event_name, "EVENT_NAME"),
+                    _severity_sanitiser(severity, "SEVERITY"),
+                    extensions_str,
+                )
+            )
+        )
+
+
+format_cef = CefFormatter().format_cef
+
+
+class LegacyCefFormatter(CefFormatter):
+    def __init__(self):
+        self.valid_extensions = _valid_extensions("legacy_extensions.csv")

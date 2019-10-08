@@ -6,7 +6,10 @@ from ._cef.base import (
     format_cef,
     int_sanitiser,
     str_sanitiser,
+    FormatCefError,
+    CefValueError,
+    CefTypeError,
 )
-from ._cef.base import valid_extensions as _valid_extensions
+from ._cef.base import CefFormatter as _CefFormatter
 
-valid_extensions = dict(_valid_extensions)
+valid_extensions = dict(_CefFormatter.valid_extensions)
