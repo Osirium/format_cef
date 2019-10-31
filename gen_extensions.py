@@ -1,11 +1,9 @@
 import csv
 import functools
-import operator
 import re
 import sys
 
 import camelot
-import pandas as pd
 
 url = (
     "https://web.archive.org/web/20191001144632if_/"
