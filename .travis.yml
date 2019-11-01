@@ -4,7 +4,13 @@ python:
   - "2.7"
   - "3.6"
   - "3.7"
-matrix:
+install:
+  - "pip install -r requirements-test.txt"
+  - "pip install ."
+script: "pytest"
+cache: pip
+
+jobs:
   include:
     - language: python
       python: 3.7
@@ -18,8 +24,15 @@ matrix:
       python: 3.7
       install: "pip install -r requirements-lint.txt"
       script: "multilint"
-install:
-  - "pip install -r requirements-test.txt"
-  - "pip install ."
-script: "pytest"
-cache: pip
+    - stage: "deploy"
+      python: 3.7
+      script: skip
+      deploy:
+        provider: pypi
+        on:
+          tags: true
+          repo: Osirium/format_cef
+        distributions: sdist bdist_wheel
+        user: __token__
+        password:
+          secure: THoKKU8OufyyI/2XeJiQr0K1qtCotD92WGtAfDJxQg+2cttWsvyWCJ+RHSHnVf3MJOcCJp674EMROmxc1BvmRXfDgW2tQHGtdzwM9nb4OaP55im7LIXMSjxWmJHAFmRU9TQ+gghvwv0QMnxyRs+kYZ9bZk184+e1eqUNCtenKKJ8fnjJqwyTxVpWD56Ii+gGBCM4YsSId2QiShhBF4MsVB27ByMzKkGVA6eqyc7YvMsKTLGeaB1xqrfO+9uIZQbgY88LBu0Ca/NvcIt1q95nPfxelZ95bkLIATHyR8IMlptRE+ra6y90PGD2GXmVsqnpGJ1hoP03wR1k7aLiUaFd/BrXgE34+4DVsVK0Y49yGZvH3oKBIOqdamLxUbaSdtpz9S+Vu0RTfvLquwQ+4VTSSw7IgjEL7YcbODa004EW244k2ARo/pNik2BsrfHCeMx6/bC0CbTYyF8Hluwxb3RBmSeCAjdrGprZcshhxqOkcTy0ZWqnPrkbklt0dqVujQJ8cmgga3HlYPeUILlPOveZAvRG3HqHu2fklOZ6AeryZTS/4eI2QfurTCTQQkp7LPY6qTe4vOdsQIPami68ZwXbpV8/wbRY8qYcyYIxSBeE61KTOPj11xrMbi0O25Gcs8BxNU/WvoxfDdjDzNS1BWAzoFrVfdp4Yaj+2jdlESPJmho=
