@@ -162,60 +162,44 @@ def _valid_extensions(fname="valid_extensions.csv"):
         }
 
 
-class CefFormatter(object):
-    valid_extensions = _valid_extensions()
+valid_extensions = _valid_extensions()
 
-    def format_cef(
-        self,
-        vendor,
-        product,
-        product_version,
-        event_id,
-        event_name,
-        severity,
-        extensions,
-    ):
-        """Produces a CEF compliant message from the arguments.
 
-        :parameter str vendor: Vendor part of the product type identifier
-        :parameter str product: Product part of the product type identifier
-        :parameter str product_version: Version part of the product type identifier
-        :parameter str event_id: A unique identifier for the type of event being
-            reported
-        :parameter str event_name: A human-friendly description of the event
-        :parameter int severity: Between 0 and 10 inclusive.
-        :parameter dict extensions: key-value pairs for event metadata.
-        """
-        valid_extensions = self.valid_extensions
-        extension_strs = {
-            valid_extensions[name].key_name: _equals_escaper(
-                valid_extensions[name].sanitiser(value, name)
-            )
-            for name, value in extensions.items()
-        }
-        extensions_str = " ".join(
-            sorted("{}={}".format(k, v) for k, v in extension_strs.items())
+def format_cef(
+    vendor, product, product_version, event_id, event_name, severity, extensions,
+):
+    """Produces a CEF compliant message from the arguments.
+
+    :parameter str vendor: Vendor part of the product type identifier
+    :parameter str product: Product part of the product type identifier
+    :parameter str product_version: Version part of the product type identifier
+    :parameter str event_id: A unique identifier for the type of event being
+        reported
+    :parameter str event_name: A human-friendly description of the event
+    :parameter int severity: Between 0 and 10 inclusive.
+    :parameter dict extensions: key-value pairs for event metadata.
+    """
+    extension_strs = {
+        valid_extensions[name].key_name: _equals_escaper(
+            valid_extensions[name].sanitiser(value, name)
         )
-        pfs = _prefix_field_str_sanitiser
-        return six.ensure_binary(
-            "|".join(
-                (
-                    "CEF:0",
-                    pfs(vendor, "VENDOR"),
-                    pfs(product, "PRODUCT"),
-                    pfs(product_version, "VERSION"),
-                    pfs(event_id, "EVENT_ID"),
-                    pfs(event_name, "EVENT_NAME"),
-                    _severity_sanitiser(severity, "SEVERITY"),
-                    extensions_str,
-                )
+        for name, value in extensions.items()
+    }
+    extensions_str = " ".join(
+        sorted("{}={}".format(k, v) for k, v in extension_strs.items())
+    )
+    pfs = _prefix_field_str_sanitiser
+    return six.ensure_binary(
+        "|".join(
+            (
+                "CEF:0",
+                pfs(vendor, "VENDOR"),
+                pfs(product, "PRODUCT"),
+                pfs(product_version, "VERSION"),
+                pfs(event_id, "EVENT_ID"),
+                pfs(event_name, "EVENT_NAME"),
+                _severity_sanitiser(severity, "SEVERITY"),
+                extensions_str,
             )
         )
-
-
-format_cef = CefFormatter().format_cef
-
-
-class LegacyCefFormatter(CefFormatter):
-    def __init__(self):
-        self.valid_extensions = _valid_extensions("legacy_extensions.csv")
+    )
