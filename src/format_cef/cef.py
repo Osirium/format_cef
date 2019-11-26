@@ -10,9 +10,9 @@ from ._cef.base import (
     CefValueError,
     CefTypeError,
 )
-from ._cef.base import CefFormatter as _CefFormatter
+from ._cef.base import valid_extensions as _valid_extensions
 
-valid_extensions = dict(_CefFormatter.valid_extensions)
+valid_extensions = dict(_valid_extensions)
 
 __all__ = [
     "CefTypeError",
