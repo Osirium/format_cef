@@ -8,8 +8,8 @@ like this:
 ```python
 >>> from format_cef import format_cef
 >>> format_cef(
-    'acme corp', 'TNT', 1.0, '404 | not found', 'Explosives not found', 10
-    oextensions={'deviceAction': 'bang = !'})
+    'acme corp', 'TNT', 1.0, '404 | not found', 'Explosives not found', 10,
+    extensions={'deviceAction': 'bang = !'})
 'CEF:0|acme corp|TNT|1.0|404 \| not found|Explosives not found|10|act=bang \= !'
 ```
 
