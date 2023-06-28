@@ -75,7 +75,7 @@ def float_sanitiser():
 
 
 def str_sanitiser(regex_str=".*", escape_chars="", min_len=0, max_len=None):
-    regex = re.compile("^{}$".format(regex_str))
+    regex = re.compile("^{}$".format(regex_str), flags=re.DOTALL)
     escape = escaper(escape_chars)
 
     def sanitise(s, debug_name):
